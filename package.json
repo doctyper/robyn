@@ -23,7 +23,7 @@
 	"devDependencies": {},
 	"optionalDependencies": {},
 	"systemDependencies": {
-		"grunt": ">=0.3.0"
+		"grunt": ">=0.4.0"
 	},
 	"engines": {
 		"node": "*"
