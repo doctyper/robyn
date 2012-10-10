@@ -2,7 +2,9 @@
 module.exports = function (grunt) {
 	"use strict";
 
-	grunt.registerHelper("spawn", function (opts) {
+	var helpers = this;
+
+	this.spawn = function (opts) {
 		var cp = require("child_process");
 		var isVerbose = grunt.option("verbose");
 		var err = [];
@@ -13,7 +15,7 @@ module.exports = function (grunt) {
 
 		if (!isVerbose) {
 			if (opts.title) {
-				grunt.helper("write", opts.title.grey);
+				helpers.write(opts.title.grey);
 			}
 
 			grunt.log.write(".".grey);
@@ -53,6 +55,6 @@ module.exports = function (grunt) {
 				opts.complete(code);
 			}
 		});
-	});
+	};
 
 };

@@ -2,13 +2,17 @@
 module.exports = function (grunt) {
 	"use strict";
 
-	grunt.registerHelper("install_modules", function (args, cb) {
-		grunt.helper("spawn", {
+	var helpers = this;
+
+	this.installModules = function (args, cb) {
+		helpers.spawn({
 			cmd: "npm",
 			args: ["install"].concat(args),
 			title: "Installing npm modules",
 			complete: cb
 		});
-	});
+	};
+
+	return this;
 
 };

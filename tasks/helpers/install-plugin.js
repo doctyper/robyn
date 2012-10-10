@@ -2,7 +2,9 @@
 module.exports = function (grunt) {
 	"use strict";
 
-	grunt.registerHelper("install_plugin", function (plug, isUpdate, cb) {
+	var helpers = this;
+
+	this.installPlugin = function (plug, isUpdate, cb) {
 		var fs = require("fs");
 		var cp = require("child_process");
 		var path = require("path");
@@ -104,7 +106,7 @@ module.exports = function (grunt) {
 			var repoPaths = grunt.file.expandFiles(plugDir + "/**/*");
 			var i, j, file, newFile;
 
-			grunt.helper("write", "Copying files into project".grey);
+			helpers.write("Copying files into project".grey);
 
 			var exclude = [
 				"package.json",
@@ -173,7 +175,7 @@ module.exports = function (grunt) {
 			if (doReplacement) {
 				var plugDir = path.join(cwd, pkg.config.dirs.robyn, plug);
 
-				grunt.helper("replace_in_files", function () {
+				helpers.replaceInFiles(function () {
 					copyFiles(plug, plugPkg, cb);
 				}, {
 					root : plugDir,
@@ -195,7 +197,7 @@ module.exports = function (grunt) {
 
 				grunt.file.mkdir(plugPath);
 
-				grunt.helper("spawn", {
+				helpers.spawn({
 					cmd: "git",
 					args: ["clone", "--depth", "1", "--branch", plugBranch, plugRepo.url, plugPath],
 					title: "Cloning repository",
@@ -232,7 +234,7 @@ module.exports = function (grunt) {
 			grunt.file.write(path.join(cwd, "package.json"), JSON.stringify(projectPkg, null, "\t") + "\n");
 
 			if (callUpdate) {
-				grunt.helper("install_modules", pluginDeps, function () {
+				helpers.installModules(pluginDeps, function () {
 					cloneExternalRepo(plug, plugPkg, cb);
 				});
 
@@ -307,7 +309,7 @@ module.exports = function (grunt) {
 
 		var checkSystemDependencies = function (plug, plugPkg, cb) {
 			if (plugPkg && plugPkg.systemDependencies) {
-				grunt.helper("check_dependencies", plugPkg, function () {
+				helpers.checkDependencies(plugPkg, function () {
 					saveSystemDependencies(plug, plugPkg, cb);
 				}, function (error) {
 					cb(error);
@@ -355,6 +357,8 @@ module.exports = function (grunt) {
 		} else {
 			installPlugin(plug, cb);
 		}
-	});
+	};
+
+	return this;
 
 };

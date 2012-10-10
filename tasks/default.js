@@ -5,9 +5,11 @@ module.exports = function (grunt) {
 	// Default task.
 	grunt.registerTask("default", function () {
 		var done = this.async();
+		var helpers = require("./helpers/help")(grunt);
+
 		var tasks = ["info"];
 
-		grunt.helper("check_initialized", function (initialized) {
+		helpers.checkInitialized(function (initialized) {
 			if (!initialized) {
 				tasks.unshift("start");
 			}

@@ -1,31 +1,13 @@
-/*global module:false*/
+/*jshint node:true*/
 module.exports = function (grunt) {
+	"use strict";
+
+	var helpers = this;
 
 	var pkg = require("../utils/pkg");
 	var fs = require("fs");
 
-	grunt.registerHelper("is_okay", function (file, include, exclude) {
-		var ok = false;
-		var re;
-
-		for (var i = 0; i < include.length; i ++) {
-			re = include[i];
-			if (re.test(file)) {
-				ok = true;
-				break;
-			}
-		}
-		for (i = 0; i < exclude.length; i ++) {
-			re = exclude[i];
-			if (re.test(file)) {
-				ok = false;
-				break;
-			}
-		}
-		return ok;
-	});
-
-	grunt.registerHelper("replace_vars", function (str) {
+	this.replaceVars = function (str) {
 		var hasMatch;
 
 		for (var p in pkg.config.vars) {
@@ -55,9 +37,9 @@ module.exports = function (grunt) {
 		}
 
 		return str;
-	});
+	};
 
-	grunt.registerHelper("replace_in_files", function (cb, opts) {
+	this.replaceInFiles = function (cb, opts) {
 		var path = require("path");
 		var updatePath = path.join(__dirname, "../utils/local-pkg");
 
@@ -88,7 +70,7 @@ module.exports = function (grunt) {
 			return !grunt.file.isMatch(excludeFiles, file) && fs.statSync(file).isFile();
 		}).forEach(function (file) {
 			var contents = fs.readFileSync(file, "utf8");
-			contents = grunt.helper("replace_vars", contents.toString());
+			contents = helpers.replaceVars(contents.toString());
 
 			if (contents) {
 				grunt.file.write(file, contents);
@@ -99,7 +81,7 @@ module.exports = function (grunt) {
 			return !grunt.file.isMatch(excludeFiles, file) && fs.statSync(file).isDirectory();
 		}).forEach(function (file) {
 			if (fs.existsSync(file)) {
-				newFile = grunt.helper("replace_vars", file.toString());
+				newFile = helpers.replaceVars(file.toString());
 
 				if (newFile && file !== newFile) {
 					var wrench = require("wrench");
@@ -114,6 +96,8 @@ module.exports = function (grunt) {
 		}
 
 		return;
-	});
+	};
+
+	return this;
 
 };

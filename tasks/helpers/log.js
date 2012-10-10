@@ -2,18 +2,21 @@
 module.exports = function (grunt) {
 	"use strict";
 
+	var helpers = this;
 	var spacer = "    ";
 
-	grunt.registerHelper("write", function (string) {
+	this.write = function (string) {
 		if (!grunt.option("verbose")) {
 			grunt.log.write("    " + string);
 		}
-	});
+	};
 
-	grunt.registerHelper("writeln", function (string) {
+	this.writeln = function (string) {
 		if (!grunt.option("verbose")) {
 			grunt.log.writeln("    " + string);
 		}
-	});
+	};
+
+	return this;
 
 };

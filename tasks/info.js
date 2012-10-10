@@ -3,19 +3,12 @@ module.exports = function(grunt) {
 	"use strict";
 
 	grunt.registerTask("info", "List project info", function () {
-
 		var done = this.async();
+		var helpers = require("./helpers/help")(grunt);
+
 		var path = require("path");
 		var colors = require("colors");
 		var hasInitialized;
-
-		grunt.helper("check_initialized", function (initialized) {
-			hasInitialized = initialized;
-
-			if (!initialized) {
-				grunt.task.run("start");
-			}
-		});
 
 		var pkg = require(path.join(process.cwd(), "package.json"));
 		var robynPkg = require("./utils/pkg");
@@ -34,18 +27,18 @@ module.exports = function(grunt) {
 				if (i === 0) {
 					grunt.log.writeln(str);
 				} else {
-					grunt.helper("writeln", str);
+					helpers.writeln(str);
 				}
 			}
 		}
 
 		if (pkg.repository) {
-			grunt.helper("writeln", "Project repository:".grey + " %s".replace("%s", pkg.repository.url));
+			helpers.writeln("Project repository:".grey + " %s".replace("%s", pkg.repository.url));
 		}
 
 		grunt.log.writeln();
 		grunt.log.writeln("[*] ".grey + "%n version: %v".replace("%n", robynPkg.name).replace("%v", robynPkg.version).magenta);
-		grunt.helper("writeln", "via %u @ branch %b".grey.replace("%u", robynPkg.repository.url).replace("%b", robynPkg.repository.branch));
+		helpers.writeln("via %u @ branch %b".grey.replace("%u", robynPkg.repository.url).replace("%b", robynPkg.repository.branch));
 		grunt.log.writeln();
 
 		var plugTitle;

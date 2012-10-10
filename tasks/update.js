@@ -4,6 +4,7 @@ module.exports = function (grunt) {
 
 	grunt.registerTask("update", "Update the boilerplate", function (plugin) {
 		var done = this.async();
+		var helpers = require("./helpers/help")(grunt);
 
 		var pkg = require("./utils/pkg");
 
@@ -26,7 +27,7 @@ module.exports = function (grunt) {
 		branch = branch || pkg.repository.branch || "master";
 
 		if (plugin === pkg.name) {
-			grunt.helper("spawn", {
+			helpers.spawn({
 				cmd: "git",
 				args: ["submodule", "foreach", "git", "pull", "origin", branch],
 				title: "Updating %s".replace("%s", pkg.config.dirs.robyn),

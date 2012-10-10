@@ -2,7 +2,9 @@
 module.exports = function (grunt) {
 	"use strict";
 
-	grunt.registerHelper("check_dependency", function (dep, cb) {
+	var helpers = this;
+
+	this.checkDependency = function (dep, cb) {
 		// TODO: ditch this when grunt v0.4 is released
 		grunt.util = grunt.util || grunt.utils;
 
@@ -82,9 +84,9 @@ module.exports = function (grunt) {
 				cb(warning);
 			}
 		});
-	});
+	};
 
-	grunt.registerHelper("check_dependencies", function (plugPkg, success, failure) {
+	this.checkDependencies = function (plugPkg, success, failure) {
 		var pkg = require("../utils/pkg");
 		var localPkg = require("../utils/local-pkg");
 		var sysDeps = plugPkg.systemDependencies || plugPkg;
@@ -104,7 +106,7 @@ module.exports = function (grunt) {
 		(function check(i) {
 			var dep = iterator[i];
 
-			grunt.helper("check_dependency", dep, function (warning) {
+			helpers.checkDependency(dep, function (warning) {
 				if (warning) {
 					if (warning === true && failure) {
 						failure(warning);
@@ -140,7 +142,7 @@ module.exports = function (grunt) {
 							validator: /[y\/n]+/i,
 							"default": "Y/n"
 						}], function (err, props) {
-							var assert = grunt.helper("get_assertion", props.force);
+							var assert = helpers.getAssertion(props.force);
 
 							if (assert) {
 								localPkg.config.warnings = localPkg.config.warnings || [];
@@ -160,6 +162,8 @@ module.exports = function (grunt) {
 				}
 			});
 		}(i));
-	});
+	};
+
+	return this;
 
 };
